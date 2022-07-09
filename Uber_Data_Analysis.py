@@ -40,3 +40,20 @@ def train_test_models(X_train, y_train, X_test, y_test):
   
   return [random_forest]
 
+def feature_eliminate(trained_model, X, y, n_features=40):
+  rfe = RFE(trained_model, n_features_to_select-n_features)
+  rfe = rfe.fit(x, y)
+  X_new = X[X.columns[rfe.support_]]
+  X_train, X_test, y_train, y_test = train_test_split(X_new, y, test_size = 0.2,random_state = 0)
+  new_fit = trained_model.fit(x_train, y_train) 
+  print(new_fit.score(X_test, y_test))
+  
+model_list = train_test_models(x_train, y_train, X_test, y_test)
+n_features = [5, 10, 15, 20]
+for model in model_list:
+  for nf in n_features:
+    print(f" {model}->{nf} features")
+    feature_eliminate (model, x, y, nf)
+    
+# 94.16% Accuracy from Random Forrest Model
+  
